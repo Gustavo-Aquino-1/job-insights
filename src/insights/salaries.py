@@ -1,4 +1,11 @@
 from typing import Union, List, Dict
+import csv
+
+
+def read(path: str) -> List[Dict]:
+    with open(path, mode="r", encoding="utf8") as file:
+        content = csv.DictReader(file, delimiter=",", quotechar='"')
+        return list(content)
 
 
 def get_max_salary(path: str) -> int:
@@ -16,7 +23,11 @@ def get_max_salary(path: str) -> int:
     int
         The maximum salary paid out of all job opportunities
     """
-    raise NotImplementedError
+    content = read(path)
+    return max(
+            [float(x['max_salary'])
+             for x in content if x["max_salary"].isnumeric()]
+        )
 
 
 def get_min_salary(path: str) -> int:

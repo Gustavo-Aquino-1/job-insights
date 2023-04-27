@@ -2,6 +2,12 @@ from typing import List, Dict
 import csv
 
 
+def read(path: str) -> List[Dict]:
+    with open(path, mode="r", encoding="utf8") as file:
+        content = csv.DictReader(file, delimiter=",", quotechar='"')
+        return list(content)
+
+
 def get_unique_industries(path: str) -> List[str]:
     """Checks all different industries and returns a list of them
 
@@ -17,8 +23,7 @@ def get_unique_industries(path: str) -> List[str]:
     list
         List of unique industries
     """
-    with open(path, mode="r", encoding="utf8") as file:
-        content = list(csv.DictReader(file, delimiter=",", quotechar='"'))
+    content = read(path)
     industries = [x['industry'] for x in content if x['industry'] != '']
     return set(industries)
 

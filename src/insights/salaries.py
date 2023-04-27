@@ -25,9 +25,12 @@ def get_max_salary(path: str) -> int:
     """
     content = read(path)
     return max(
-            [float(x['max_salary'])
-             for x in content if x["max_salary"].isnumeric()]
-        )
+        [
+            float(x["max_salary"])
+            for x in content
+            if x["max_salary"].isnumeric()
+        ]
+    )
 
 
 def get_min_salary(path: str) -> int:
@@ -47,9 +50,24 @@ def get_min_salary(path: str) -> int:
     """
     content = read(path)
     return min(
-            [float(x['min_salary'])
-             for x in content if x["min_salary"].isnumeric()]
-        )
+        [
+            float(x["min_salary"])
+            for x in content
+            if x["min_salary"].isnumeric()
+        ]
+    )
+
+
+def validate(job, salary):
+    if "min_salary" not in job or "max_salary" not in job:
+        raise ValueError
+    if (
+        not str(job["min_salary"]).isnumeric()
+        or not str(job["max_salary"]).isnumeric()
+    ):
+        raise ValueError
+    if int(job["min_salary"]) > int(job["max_salary"]):
+        raise ValueError
 
 
 def matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
@@ -75,12 +93,19 @@ def matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
         If `job["min_salary"]` is greather than `job["max_salary"]`
         If `salary` isn't a valid integer
     """
-    raise NotImplementedError
+    validate(job, salary)
+    try:
+        if int(salary) >= int(job["min_salary"]) and int(salary) <= int(
+            job["max_salary"]
+        ):
+            return True
+        return False
+    except Exception:
+        raise ValueError
 
 
 def filter_by_salary_range(
-    jobs: List[dict],
-    salary: Union[str, int]
+    jobs: List[dict], salary: Union[str, int]
 ) -> List[Dict]:
     """Filters a list of jobs by salary range
 
